@@ -5,9 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>imkarton.de</title>
 <meta name="description" content="imkarton.de, betrieben von Trendiva Lux. Kuratierte Produkte, zuverlässiger Versand, sachlicher Kundenservice." />
+<meta name="theme-color" content="#F7F5F0">
+<meta name="color-scheme" content="light">
+<link rel="preload" as="image" href="assets/logo.jpeg" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
 <style>
   :root{
     --bg: #F7F5F0;
@@ -20,15 +25,16 @@
     --rule: #D9D2C2;
   }
   *,*::before,*::after{ box-sizing:border-box; }
-  html,body{ margin:0; padding:0; background:var(--bg); color:var(--ink); }
-  /* Paper-Braille accent: a single opaque dot field, visible only through a
-     soft blob mask that drifts very slowly across the page. Dots surface and
-     recede as the mask moves — no flicker, no pulse, just quiet migration. */
+  html{ -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+  html,body{ margin:0; padding:0; background:var(--bg); color:var(--ink); overflow-x: hidden; }
+  img{ max-width:100%; height:auto; }
+  /* Paper-Braille accent: static dotted field revealed through soft blob mask.
+     No animation: keeps scroll latency at zero (mask animations are paint-bound). */
   body{ position: relative; }
   body::before{
     content:"";
     position: fixed;
-    inset: -20vmax;                 /* oversize so mask drift never reveals edges */
+    inset: 0;
     pointer-events: none;
     z-index: 0;
     background-image: radial-gradient(rgba(15,34,49,0.22) 1.1px, transparent 1.4px);
@@ -47,20 +53,15 @@
       radial-gradient(ellipse 320px 220px at 54% 52%, #000 0%, transparent 64%);
     -webkit-mask-composite: source-over;
             mask-composite: add;
-    -webkit-mask-size: 180% 180%;
-            mask-size: 180% 180%;
-    animation: braille-drift 90s linear infinite;
-    will-change: mask-position;
+    contain: strict;
   }
-  @keyframes braille-drift{
-    0%   { -webkit-mask-position:   0%   0%;         mask-position:   0%   0%; }
-    25%  { -webkit-mask-position: -40%  20%;         mask-position: -40%  20%; }
-    50%  { -webkit-mask-position: -20% -30%;         mask-position: -20% -30%; }
-    75%  { -webkit-mask-position:  25% -10%;         mask-position:  25% -10%; }
-    100% { -webkit-mask-position:   0%   0%;         mask-position:   0%   0%; }
-  }
-  @media (prefers-reduced-motion: reduce){
-    body::before{ animation: none; }
+  /* Drop the heavy multi-layer mask on small screens — keep one cheap blob */
+  @media (max-width: 720px){
+    body::before{
+      -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 35%, #000 0%, transparent 70%);
+              mask-image: radial-gradient(ellipse 60% 50% at 50% 35%, #000 0%, transparent 70%);
+      opacity: .7;
+    }
   }
   body > *{ position: relative; z-index: 1; }
   body{
@@ -107,7 +108,6 @@
     height: 28px;
     object-fit: contain;
     display: block;
-    mix-blend-mode: multiply; /* drops the near-white paper bg against page bg */
   }
   .topbar nav{ display:flex; gap: 10px; align-items:center; }
   .topbar nav a{
@@ -119,8 +119,7 @@
     padding: 9px 16px;
     border: 1px solid var(--border);
     border-radius: 999px;
-    background: rgba(255,255,255,0.55);
-    backdrop-filter: blur(6px);
+    background: rgba(255,253,247,0.85);
     transition: background-color .2s ease, border-color .2s ease, color .2s ease, transform .1s ease;
   }
   .topbar nav a:hover{
@@ -313,6 +312,13 @@
   @media (prefers-reduced-motion: reduce){
     .logo-float, .carton, .flap, .logo-shadow{ animation: none !important; }
   }
+  /* Mobile: pause continuous compositor work on the 3D carton.
+     Keep the closed cube + bob, drop the spin and flap loops. */
+  @media (max-width: 720px){
+    .carton{ animation: none; transform: translate(-50%, -50%) rotateX(-18deg) rotateY(-22deg); }
+    .flap{ animation: none; }
+    .logo-shadow{ animation: none; opacity: .7; }
+  }
   .wordmark{
     font-weight: 700;
     font-size: clamp(36px, 6vw, 56px);
@@ -346,36 +352,16 @@
     opacity: .85;
   }
   @media (max-width: 560px){
-    .tagline{ font-size: 16px; }
+    .tagline{ font-size: 16px; max-width: 30ch; }
     .tagline .sep{ margin: 0 8px 2px; }
     .logo-mark{ width: 112px; height: 112px; margin-bottom: 28px; }
-  }
-
-  .scroll-hint{
-    position:absolute;
-    bottom: 36px;
-    left:50%;
-    transform: translateX(-50%);
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap: 10px;
-    color: var(--ink-mute);
-    font-size: 12px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    font-weight: 500;
-  }
-  .scroll-hint .line{
-    width: 1px; height: 36px;
-    background: linear-gradient(to bottom, rgba(15,34,49,0) 0%, rgba(15,34,49,0.35) 100%);
-    animation: drip 2.4s ease-in-out infinite;
-  }
-  @keyframes drip{
-    0%   { transform: scaleY(0.2); transform-origin: top; opacity:.2; }
-    50%  { transform: scaleY(1);   transform-origin: top; opacity:.8; }
-    51%  { transform: scaleY(1);   transform-origin: bottom; }
-    100% { transform: scaleY(0);   transform-origin: bottom; opacity:.2; }
+    .hero45 .head{ gap: 14px; margin-bottom: 28px; }
+    .hero45 h1.wordmark{ font-size: clamp(34px, 9vw, 48px); }
+    .badge{ font-size: 11px; padding: 5px 12px; }
+    .frame-wrap{ max-width: 280px; }
+    .image-frame{ max-height: 260px; border-radius: 16px; }
+    .logo-stage{ width: 200px !important; height: 200px !important; }
+    .carton{ --sz: 100px !important; --half: 50px !important; }
   }
 
   /* Section scaffolding */
@@ -384,6 +370,8 @@
     border-top: 1px solid var(--rule);
     position: relative;
     overflow: hidden;
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 600px;
   }
   /* Subtle dotted texture field behind section heading — reused hero breath pattern,
      static and low-opacity so it reads as paper, not noise. */
@@ -485,8 +473,7 @@
     padding: 6px 14px;
     border: 1px solid var(--border);
     border-radius: 999px;
-    background: rgba(255,255,255,0.4);
-    backdrop-filter: blur(6px);
+    background: rgba(255,253,247,0.7);
   }
   .badge .dot{
     width: 6px; height: 6px; border-radius: 999px;
@@ -533,6 +520,8 @@
     max-height: 340px;
     width: 100%;
     border-radius: 20px;
+    contain: layout paint;
+    transform: translateZ(0);
     /* Solid page bg underneath so the drifting Braille dots cannot bleed through
        the carton area. Gentle radial wash sits on top for depth. */
     background-color: var(--bg);
@@ -784,7 +773,12 @@
     gap: 18px;
     flex-wrap: wrap;
   }
-  footer nav{ display:flex; gap: 22px; }
+  footer nav{ display:flex; gap: 22px; flex-wrap: wrap; }
+  footer a{ padding: 6px 0; }
+  @media (max-width: 560px){
+    footer{ padding: 22px 0 28px; gap: 12px; font-size: 12.5px; }
+    footer nav{ gap: 16px; }
+  }
   footer a{
     color: var(--ink-mute);
     border-bottom: none;
@@ -808,7 +802,6 @@
   }
   @media (prefers-reduced-motion: reduce){
     .reveal{ opacity:1; transform:none; animation:none; }
-    .scroll-hint .line{ animation:none; opacity:.5; }
   }
 </style>
 </head>
@@ -849,7 +842,7 @@
 
 <header class="topbar shell">
   <span class="mark">
-    <img src="assets/logo.jpeg" alt="imkarton.de" class="mark-logo">
+    <img src="assets/logo.jpeg" alt="imkarton.de" class="mark-logo" width="28" height="28" decoding="async" fetchpriority="high">
     imkarton.de
   </span>
   <nav>
