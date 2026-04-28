@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /legal_docs/
+Disallow: /docs/
+
+Sitemap: https://imkarton.de/sitemap.xml
