@@ -1008,8 +1008,8 @@
     // Skip on touch devices where there is no hovering cursor.
     var hasHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
     if (parallax && stage && hasHover){
-      var qParaX = gsap.quickTo(parallax, 'rotationX', { duration: 0.9, ease: 'power2.out' });
-      var qParaY = gsap.quickTo(parallax, 'rotationY', { duration: 0.9, ease: 'power2.out' });
+      var qParaX = gsap.quickTo(parallax, 'rotationX', { duration: 0.55, ease: 'power2.out' });
+      var qParaY = gsap.quickTo(parallax, 'rotationY', { duration: 0.55, ease: 'power2.out' });
       var qLx = ornL && gsap.quickTo(ornL, 'x', { duration: 1.0, ease: 'power2.out' });
       var qLy = ornL && gsap.quickTo(ornL, 'y', { duration: 1.0, ease: 'power2.out' });
       var qRx = ornR && gsap.quickTo(ornR, 'x', { duration: 1.0, ease: 'power2.out' });
@@ -1018,8 +1018,8 @@
       window.addEventListener('mousemove', function(e){
         var dx = (e.clientX / window.innerWidth - 0.5) * 2;   // -1..1
         var dy = (e.clientY / window.innerHeight - 0.5) * 2;
-        qParaY(dx * 14);
-        qParaX(-dy * 8);
+        qParaY(dx * 24);
+        qParaX(-dy * 15);
         if (qLx){ qLx(dx * -18); qLy(dy * -10); }
         if (qRx){ qRx(dx *  18); qRy(dy *  10); }
       }, { passive: true });
