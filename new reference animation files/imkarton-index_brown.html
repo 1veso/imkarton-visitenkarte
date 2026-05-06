@@ -1,0 +1,944 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>imkarton.de</title>
+<meta name="description" content="imkarton.de, betrieben von der Importia UG. Kuratierte Produkte, zuverlässiger Versand, sachlicher Kundenservice." />
+<link rel="canonical" href="https://imkarton.de/" />
+<meta name="theme-color" content="#F7F5F0">
+<meta name="color-scheme" content="light">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preload" as="image" href="assets/logo.jpeg" fetchpriority="high">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+<style>
+  :root{
+    --bg: #F7F5F0;
+    --ink: #0F2231;
+    --ink-soft: #3A4A58;
+    --ink-mute: #6B7581;
+    --accent: #2B6E8F;
+    --border: #E5DFD2;
+    --border-soft: #EDE8DB;
+    --rule: #D9D2C2;
+    /* ── Real cardboard face tones — flat, matte, directional ──
+       Top/flaps catch most light. Front is medium. Sides fall off.
+       Back and floor are darkest. No shine, no gradient within a face. */
+    --face-top:   hsl(30, 50%, 52%);   /* flaps / lid — brightest */
+    --face-front: hsl(26, 55%, 40%);   /* front face — medium */
+    --face-side:  hsl(24, 57%, 33%);   /* left / right — darker */
+    --face-back:  hsl(22, 59%, 27%);   /* back — darkest side */
+    --face-floor: hsl(20, 60%, 22%);   /* floor — deepest */
+    --edge-hi:    hsl(30, 46%, 56%);   /* lighter edge on top-facing edges */
+    --edge-lo:    hsl(22, 55%, 24%);   /* darker edge on shadow edges */
+    --seam:       rgba(50, 24, 4, 0.60); /* deep pressed fold-crease */
+  }
+  *,*::before,*::after{ box-sizing:border-box; }
+  html{ -webkit-text-size-adjust:100%; -webkit-tap-highlight-color:transparent; }
+  html,body{ margin:0; padding:0; background:var(--bg); color:var(--ink); overflow-x:hidden; }
+  img{ max-width:100%; height:auto; }
+  body{ position:relative; }
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+    background-image:radial-gradient(rgba(15,34,49,0.22) 1.1px,transparent 1.4px);
+    background-size:18px 18px;
+    -webkit-mask-image:
+      radial-gradient(ellipse 520px 340px at 18% 24%,#000 0%,transparent 62%),
+      radial-gradient(ellipse 440px 280px at 82% 36%,#000 0%,transparent 62%),
+      radial-gradient(ellipse 400px 260px at 32% 78%,#000 0%,transparent 62%),
+      radial-gradient(ellipse 360px 240px at 74% 86%,#000 0%,transparent 62%),
+      radial-gradient(ellipse 320px 220px at 54% 52%,#000 0%,transparent 64%);
+    mask-image:
+      radial-gradient(ellipse 520px 340px at 18% 24%,#000 0%,transparent 62%),
+      radial-gradient(ellipse 440px 280px at 82% 36%,#000 0%,transparent 62%),
+      radial-gradient(ellipse 400px 260px at 32% 78%,#000 0%,transparent 62%),
+      radial-gradient(ellipse 360px 240px at 74% 86%,#000 0%,transparent 62%),
+      radial-gradient(ellipse 320px 220px at 54% 52%,#000 0%,transparent 64%);
+    -webkit-mask-composite:source-over; mask-composite:add; contain:strict;
+  }
+  @media(max-width:720px){
+    body::before{
+      -webkit-mask-image:radial-gradient(ellipse 60% 50% at 50% 35%,#000 0%,transparent 70%);
+      mask-image:radial-gradient(ellipse 60% 50% at 50% 35%,#000 0%,transparent 70%);
+      opacity:.7;
+    }
+  }
+  body>*{ position:relative; z-index:1; }
+  body{
+    font-family:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-weight:400; font-size:16px; line-height:1.6;
+    -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    text-rendering:optimizeLegibility; font-feature-settings:"ss01","cv11";
+  }
+  a{ color:var(--accent); text-decoration:none; border-bottom:1px solid rgba(43,110,143,0.25); transition:border-color .2s ease,color .2s ease; }
+  a:hover{ border-bottom-color:var(--accent); }
+  ::selection{ background:rgba(43,110,143,0.15); color:var(--ink); }
+
+  .shell{ max-width:1040px; margin:0 auto; padding:0 32px; }
+  @media(max-width:560px){ .shell{ padding:0 22px; } }
+
+  /* Topbar */
+  .topbar{ display:flex; align-items:center; justify-content:space-between; padding:22px 0; font-size:13px; letter-spacing:0.02em; color:var(--ink-mute); }
+  .topbar .mark{ display:inline-flex; align-items:center; gap:10px; color:var(--ink); font-weight:500; }
+  .topbar .mark-logo{ width:28px; height:28px; object-fit:contain; display:block; }
+  .topbar nav{ display:flex; gap:10px; align-items:center; }
+  .topbar nav a{
+    color:var(--ink); text-decoration:none; font-size:13.5px; font-weight:500; letter-spacing:0.01em;
+    padding:9px 16px; border:1px solid var(--border); border-radius:999px;
+    background:rgba(255,253,247,0.85);
+    transition:background-color .2s ease,border-color .2s ease,color .2s ease,transform .1s ease;
+  }
+  .topbar nav a:hover{ background:#ffffff; border-color:rgba(43,110,143,0.35); color:var(--accent); }
+  .topbar nav a:active{ transform:translateY(1px); }
+  .topbar nav a:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  @media(max-width:560px){ .topbar nav{ display:none; } }
+
+  /* ================================================================
+     HERO CARTON
+     Upgraded animation system:
+     - CSS spin-y REMOVED. JS drives rotationX/Y via velocity model.
+     - Mouse direction = spin direction (move left = box spins left).
+     - .frame-wrap is draggable anywhere on page (pointer capture API).
+     - Canvas particles burst at flap-open moment every 10s cycle.
+     - Metallic icy-blue/white faces with sharp polished specular sweep.
+     - Synchronized breathing glow + shadow.
+     ================================================================ */
+
+  .logo-stage{
+    width:min(100%,clamp(200px,32vw,420px)); aspect-ratio:1/1;
+    position:relative; perspective:1300px; perspective-origin:50% 42%;
+    margin:0 auto; z-index:2;
+  }
+
+  /* Ground shadow: breathes in sync with the bob */
+  .logo-shadow{
+    position:absolute; left:50%; bottom:14%; width:58%; height:14px; border-radius:50%;
+    background:radial-gradient(ellipse at center,rgba(90,52,18,0.28) 0%,rgba(90,52,18,0.10) 50%,rgba(90,52,18,0) 75%);
+    filter:blur(5px); pointer-events:none; z-index:0;
+    animation:shadow-breathe 4.2s ease-in-out infinite;
+  }
+  @keyframes shadow-breathe{
+    0%,100%{ transform:translateX(-50%) scaleX(1);    opacity:0.65; }
+    50%    { transform:translateX(-50%) scaleX(0.62); opacity:0.24; }
+  }
+
+  /* Bob wrapper - gentle vertical float */
+  .logo-float{
+    position:absolute; inset:0; transform-style:preserve-3d;
+    animation:bob 4.2s ease-in-out infinite; will-change:transform;
+  }
+  @keyframes bob{
+    0%,100%{ transform:translateY(0); }
+    50%    { transform:translateY(-10px); }
+  }
+
+  /* Parallax wrapper - kept for DOM/preserve-3d structure; JS no longer animates it */
+  .carton-parallax{ position:absolute; inset:0; transform-style:preserve-3d; }
+
+  /* Carton: NO animation — JS drives transform via direct style in RAF */
+  .carton{
+    --sz:clamp(110px,14vw,190px); --half:calc(var(--sz)/2);
+    width:var(--sz); height:var(--sz);
+    position:absolute; left:50%; top:50%;
+    transform-style:preserve-3d;
+    transform:translate(-50%,-50%) rotateX(-18deg) rotateY(-22deg);
+    will-change:transform;
+  }
+
+  /* ── Metallic face finish ──
+     Three-layer background per face:
+     1. Diagonal ambient sheen (top-left bright) = environmental depth
+     2. Brand seam (vertical, 0.5px)
+     3. Two-tone base (lit / shadow halves)
+     All three stack via CSS background layers. */
+  .carton .face{
+    position:absolute;
+    inset:-0.5px;
+    box-sizing:border-box;
+    border-radius:0;
+    backface-visibility:visible;
+    transform-style:preserve-3d; /* enables backface-visibility:hidden on pseudo-element children */
+  }
+  .carton .face.front, .carton .face.left{
+    border:1px solid var(--edge-lo);
+    background:
+      linear-gradient(90deg,
+        transparent calc(50% - 0.5px),var(--seam) calc(50% - 0.5px),
+        var(--seam) calc(50% + 0.5px),transparent calc(50% + 0.5px)),
+      var(--face-front);
+  }
+  .carton .face.back, .carton .face.right{
+    border:1px solid var(--edge-lo);
+    background:
+      linear-gradient(90deg,
+        transparent calc(50% - 0.5px),var(--seam) calc(50% - 0.5px),
+        var(--seam) calc(50% + 0.5px),transparent calc(50% + 0.5px)),
+      var(--face-back);
+  }
+  .carton .face.right{
+    background:
+      linear-gradient(90deg,
+        transparent calc(50% - 0.5px),var(--seam) calc(50% - 0.5px),
+        var(--seam) calc(50% + 0.5px),transparent calc(50% + 0.5px)),
+      var(--face-side);
+  }
+  .carton .face.floor{
+    border:1px solid var(--edge-lo);
+    background:
+      linear-gradient(90deg,
+        transparent calc(50% - 0.5px),var(--seam) calc(50% - 0.5px),
+        var(--seam) calc(50% + 0.5px),transparent calc(50% + 0.5px)),
+      var(--face-floor);
+  }
+  .carton .flap{
+    border:1px solid var(--edge-hi);
+    background: var(--face-top);
+  }
+
+  /* ── Karton Labels & Aufkleber ────────────────────────────────
+     Every pseudo-element sits 0.1px in front of its face via
+     translateZ(0.1px) + backface-visibility:hidden.
+     This means stickers are INVISIBLE when looking from inside the box.
+     Tape: warm-grey vertical strips at ~75% opacity, extend past
+     face top/bottom edges to read as wrapping around the panels.
+     ──────────────────────────────────────────────────────────── */
+
+  /* FRONT FACE — cream handling label */
+  .carton .face.front::before{
+    content:"";
+    position:absolute;
+    left:8%; top:8%; right:8%; height:30%;
+    background:rgba(255,252,242,0.96);
+    border:0.5px solid rgba(140,100,45,0.20);
+    box-shadow:0 2px 5px rgba(0,0,0,0.10),0 0 0 0.5px rgba(255,255,255,0.30) inset;
+    pointer-events:none;
+    transform:translateZ(0.1px);
+    backface-visibility:hidden;
+  }
+  .carton .face.front::after{
+    content:"↑      ↑";
+    position:absolute;
+    left:8%; top:8%; right:8%; height:30%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:calc(var(--sz) * 0.17);
+    font-weight:700;
+    color:hsl(24,58%,24%);
+    letter-spacing:0.25em;
+    pointer-events:none;
+    transform:translateZ(0.2px);
+    backface-visibility:hidden;
+  }
+
+  /* FLAP SEAM — amber tape strip across the f-front/f-back join on closed lid */
+  .carton .flap.f-back::after{
+    content:"";
+    position:absolute;
+    left:-2px; bottom:-5px; right:-2px; height:10px;
+    background:rgba(208,178,122,0.55);
+    border-top:0.5px solid rgba(185,150,80,0.38);
+    border-bottom:0.5px solid rgba(185,150,80,0.38);
+    pointer-events:none;
+    transform:translateZ(0.1px);
+    backface-visibility:hidden;
+    animation:tape-seam 10s linear infinite;
+    will-change:clip-path;
+  }
+
+  /* LEFT FACE — single vertical duct tape strip */
+  .carton .face.left::before{
+    content:"";
+    position:absolute;
+    left:35%; top:-6px; bottom:-6px; width:14%;
+    background:
+      repeating-linear-gradient(90deg,
+        rgba(255,255,255,0.08) 0,rgba(255,255,255,0.08) 1px,
+        transparent 1px,transparent 4px
+      ),
+      rgba(180,173,156,0.75);
+    box-shadow:1px 0 0 rgba(255,255,255,0.16),-1px 0 0 rgba(0,0,0,0.10);
+    pointer-events:none;
+    transform:translateZ(0.1px);
+    backface-visibility:hidden;
+    animation:tape-left 10s linear infinite;
+    will-change:clip-path;
+  }
+
+  /* BACK FACE — two vertical duct tape strips, slightly offset = overlapping look */
+  .carton .face.back::before{
+    content:"";
+    position:absolute;
+    left:26%; top:-6px; bottom:-6px; width:13%;
+    background:
+      repeating-linear-gradient(90deg,
+        rgba(255,255,255,0.08) 0,rgba(255,255,255,0.08) 1px,
+        transparent 1px,transparent 4px
+      ),
+      rgba(180,173,156,0.75);
+    box-shadow:1px 0 0 rgba(255,255,255,0.16),-1px 0 0 rgba(0,0,0,0.10);
+    pointer-events:none;
+    transform:translateZ(0.1px);
+    backface-visibility:hidden;
+    animation:tape-back1 10s linear infinite;
+    will-change:clip-path;
+  }
+  .carton .face.back::after{
+    content:"";
+    position:absolute;
+    left:57%; top:-6px; bottom:-6px; width:13%;
+    background:
+      repeating-linear-gradient(90deg,
+        rgba(255,255,255,0.08) 0,rgba(255,255,255,0.08) 1px,
+        transparent 1px,transparent 4px
+      ),
+      rgba(180,173,156,0.75);
+    box-shadow:1px 0 0 rgba(255,255,255,0.16),-1px 0 0 rgba(0,0,0,0.10);
+    pointer-events:none;
+    transform:translateZ(0.1px);
+    backface-visibility:hidden;
+    animation:tape-back2 10s linear infinite;
+    will-change:clip-path;
+  }
+
+  /* RIGHT FACE — ZERBRECHLICH fragile sticker + diamond mark */
+  .carton .face.right::before{
+    content:"ZERBRECHLICH";
+    position:absolute;
+    left:8%; top:58%; right:8%; height:20%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:calc(var(--sz) * 0.068);
+    font-weight:700;
+    letter-spacing:0.13em;
+    color:hsl(24,58%,24%);
+    background:rgba(255,252,242,0.95);
+    border:0.5px solid rgba(140,100,45,0.20);
+    box-shadow:0 2px 4px rgba(0,0,0,0.09);
+    pointer-events:none;
+    font-family:inherit;
+    transform:translateZ(0.1px);
+    backface-visibility:hidden;
+  }
+  .carton .face.right::after{
+    content:"◆";
+    position:absolute;
+    left:8%; top:46%; right:8%; height:13%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:calc(var(--sz) * 0.10);
+    color:rgba(255,252,242,0.80);
+    pointer-events:none;
+    transform:translateZ(0.1px);
+    backface-visibility:hidden;
+  }
+
+
+
+  /* Face placement */
+  .face.front { transform:translateZ(var(--half)); }
+  .face.back  { transform:rotateY(180deg) translateZ(var(--half)); }
+  .face.left  { transform:rotateY(-90deg) translateZ(var(--half)); }
+  .face.right { transform:rotateY( 90deg) translateZ(var(--half)); }
+  .face.floor { transform:rotateX(-90deg) translateZ(var(--half)); }
+
+  .lid{
+    position:absolute; left:0; top:0; width:var(--sz); height:var(--sz);
+    transform-style:preserve-3d;
+    transform:translateY(calc(var(--half)*-1)) rotateX(90deg);
+  }
+  .flap{
+    position:absolute; box-sizing:border-box; border-radius:0;
+    backface-visibility:visible; animation:10s ease-in-out infinite; will-change:transform;
+    transform-style:preserve-3d;
+  }
+  .flap.f-front{ left:0;   top:50%; width:100%; height:50%; transform-origin:bottom center; animation-name:open-front; }
+  .flap.f-back { left:0;   top:0;   width:100%; height:50%; transform-origin:top center;    animation-name:open-back;  }
+  .flap.f-left { left:0;   top:0;   width:50%;  height:100%;transform-origin:center left;   animation-name:open-left;  }
+  .flap.f-right{ left:50%; top:0;   width:50%;  height:100%;transform-origin:center right;  animation-name:open-right; }
+
+  /* Snappy open, brief hold, bouncy close */
+  @keyframes open-front{
+    0%  { transform:rotateX(0deg);    animation-timing-function:cubic-bezier(0.40,0,0.12,1); }
+    5%  { transform:rotateX(0deg);    animation-timing-function:cubic-bezier(0.22,0,0.08,1.55); }
+    30% { transform:rotateX(-224deg); animation-timing-function:cubic-bezier(0.50,0,0.60,1); }
+    35% { transform:rotateX(-212deg); animation-timing-function:linear; }
+    60% { transform:rotateX(-212deg); animation-timing-function:cubic-bezier(0.50,0,0.18,1.28); }
+    90% { transform:rotateX(-3deg);   animation-timing-function:cubic-bezier(0.32,0,0.52,1); }
+    96% { transform:rotateX(1.5deg);  animation-timing-function:cubic-bezier(0.40,0,0.60,1); }
+    100%{ transform:rotateX(0deg); }
+  }
+  @keyframes open-back{
+    0%  { transform:rotateX(0deg);   animation-timing-function:cubic-bezier(0.40,0,0.12,1); }
+    5%  { transform:rotateX(0deg);   animation-timing-function:cubic-bezier(0.22,0,0.08,1.55); }
+    30% { transform:rotateX(224deg); animation-timing-function:cubic-bezier(0.50,0,0.60,1); }
+    35% { transform:rotateX(212deg); animation-timing-function:linear; }
+    60% { transform:rotateX(212deg); animation-timing-function:cubic-bezier(0.50,0,0.18,1.28); }
+    90% { transform:rotateX(3deg);   animation-timing-function:cubic-bezier(0.32,0,0.52,1); }
+    96% { transform:rotateX(-1.5deg);animation-timing-function:cubic-bezier(0.40,0,0.60,1); }
+    100%{ transform:rotateX(0deg); }
+  }
+  @keyframes open-left{
+    0%  { transform:rotateY(0deg);    animation-timing-function:cubic-bezier(0.40,0,0.12,1); }
+    3%  { transform:rotateY(0deg);    animation-timing-function:cubic-bezier(0.22,0,0.08,1.55); }
+    26% { transform:rotateY(-224deg); animation-timing-function:cubic-bezier(0.50,0,0.60,1); }
+    31% { transform:rotateY(-210deg); animation-timing-function:linear; }
+    58% { transform:rotateY(-210deg); animation-timing-function:cubic-bezier(0.50,0,0.18,1.28); }
+    85% { transform:rotateY(-3deg);   animation-timing-function:cubic-bezier(0.32,0,0.52,1); }
+    91% { transform:rotateY(1.5deg);  animation-timing-function:cubic-bezier(0.40,0,0.60,1); }
+    100%{ transform:rotateY(0deg); }
+  }
+  @keyframes open-right{
+    0%  { transform:rotateY(0deg);   animation-timing-function:cubic-bezier(0.40,0,0.12,1); }
+    3%  { transform:rotateY(0deg);   animation-timing-function:cubic-bezier(0.22,0,0.08,1.55); }
+    26% { transform:rotateY(224deg); animation-timing-function:cubic-bezier(0.50,0,0.60,1); }
+    31% { transform:rotateY(210deg); animation-timing-function:linear; }
+    58% { transform:rotateY(210deg); animation-timing-function:cubic-bezier(0.50,0,0.18,1.28); }
+    85% { transform:rotateY(3deg);   animation-timing-function:cubic-bezier(0.32,0,0.52,1); }
+    91% { transform:rotateY(-1.5deg);animation-timing-function:cubic-bezier(0.40,0,0.60,1); }
+    100%{ transform:rotateY(0deg); }
+  }
+
+  /* ── Tape wrap keyframes ───────────────────────────────────────
+     Timed to the same 10s cycle as the flap animations.
+     Flaps are fully closed by ~91%. Tape then applies in cascade:
+       seam  → 91-94%   (horizontal, left-to-right)
+       left  → 93-96.5% (vertical,   top-to-bottom)
+       back1 → 94.2-97.7% (vertical, top-to-bottom)
+       back2 → 95.4-98.9% (vertical, top-to-bottom)
+     The reveal easing cubic-bezier(0.55,0,0.15,1) = fast initial
+     pull, ease-in at the end — feels like tape being pressed flat.
+     ──────────────────────────────────────────────────────────── */
+  @keyframes tape-seam{
+    /* hidden while flaps are open */
+    0%,90%  { clip-path:inset(0 100% 0 0); opacity:0; }
+    /* flaps close — tape pops visible at left edge, sweeps right */
+    90.1%   { clip-path:inset(0 100% 0 0); opacity:1;
+              animation-timing-function:cubic-bezier(0.55,0,0.15,1); }
+    94%     { clip-path:inset(0 0 0 0);    opacity:1; }
+    100%    { clip-path:inset(0 0 0 0);    opacity:1; }
+  }
+  @keyframes tape-left{
+    0%,92%  { clip-path:inset(0 0 100% 0); opacity:0; }
+    92.1%   { clip-path:inset(0 0 100% 0); opacity:1;
+              animation-timing-function:cubic-bezier(0.55,0,0.15,1); }
+    96.5%   { clip-path:inset(0 0 0 0);    opacity:1; }
+    100%    { clip-path:inset(0 0 0 0);    opacity:1; }
+  }
+  @keyframes tape-back1{
+    0%,93.2%  { clip-path:inset(0 0 100% 0); opacity:0; }
+    93.3%     { clip-path:inset(0 0 100% 0); opacity:1;
+                animation-timing-function:cubic-bezier(0.55,0,0.15,1); }
+    97.7%     { clip-path:inset(0 0 0 0);    opacity:1; }
+    100%      { clip-path:inset(0 0 0 0);    opacity:1; }
+  }
+  @keyframes tape-back2{
+    0%,94.4%  { clip-path:inset(0 0 100% 0); opacity:0; }
+    94.5%     { clip-path:inset(0 0 100% 0); opacity:1;
+                animation-timing-function:cubic-bezier(0.55,0,0.15,1); }
+    98.9%     { clip-path:inset(0 0 0 0);    opacity:1; }
+    100%      { clip-path:inset(0 0 0 0);    opacity:1; }
+  }
+
+  @media(max-width:720px){
+    .carton{ transform:translate(-50%,-50%) rotateX(-18deg) rotateY(-22deg); }
+    .flap{ animation:none; }
+    .logo-float{ animation:none; }
+    .logo-shadow{ animation:none; transform:translateX(-50%); }
+  }
+  @media(prefers-reduced-motion:reduce){
+    .carton,.flap,.logo-float{ animation:none !important; }
+    .carton{ transform:translate(-50%,-50%) rotateX(-18deg) rotateY(-22deg); }
+    .logo-shadow{ animation:none !important; transform:translateX(-50%); }
+    .image-frame::before{ animation:none !important; }
+    /* Show tape statically — no wrapping animation, just visible */
+    .carton .face.left::before,
+    .carton .face.back::before,
+    .carton .face.back::after,
+    .carton .flap.f-back::after{
+      animation:none !important;
+      clip-path:inset(0 0 0 0);
+      opacity:1;
+    }
+  }
+
+  /* Hero layout */
+  .hero45{ padding:48px 0 48px; position:relative; overflow:visible; }
+  @media(max-width:720px){ .hero45{ padding:36px 0 36px; } }
+
+  .breath{ margin:28px auto 0; width:200px; height:56px; position:relative; display:grid; place-items:center; pointer-events:none; }
+  .breath .dots{
+    position:absolute; inset:0;
+    background-image:radial-gradient(rgba(15,34,49,0.18) 1.2px,transparent 1.4px);
+    background-size:14px 14px;
+    -webkit-mask-image:radial-gradient(ellipse 55% 70% at 50% 50%,#000 15%,transparent 75%);
+    mask-image:radial-gradient(ellipse 55% 70% at 50% 50%,#000 15%,transparent 75%);
+    opacity:0.55;
+  }
+  .breath .halo{ display:none; }
+
+  .hero45 .head{ display:flex; flex-direction:column; align-items:center; gap:18px; text-align:center; margin:0 auto 40px; }
+  .hero45 .head.head-below{ margin:28px auto 0; }
+  .badge{
+    display:inline-flex; align-items:center; gap:8px; font-size:12px; font-weight:500;
+    letter-spacing:0.12em; text-transform:uppercase; color:var(--ink-soft);
+    padding:6px 14px; border:1px solid var(--border); border-radius:999px;
+    background:rgba(255,253,247,0.7);
+  }
+  .badge .dot{ width:6px; height:6px; border-radius:999px; background:var(--accent); box-shadow:0 0 0 3px rgba(43,110,143,0.15); }
+  .hero45 h1.wordmark{ margin:0; font-weight:700; font-size:clamp(40px,7vw,72px); letter-spacing:-0.028em; line-height:1; color:var(--ink); }
+  .hero45 h1.wordmark .dot{ color:var(--accent); }
+  .hero45 .tagline{ margin:0; font-weight:400; font-size:clamp(16px,1.6vw,19px); line-height:1.5; color:var(--ink-soft); max-width:40ch; letter-spacing:0.005em; }
+  .hero45 .tagline .sep{ display:inline-block; width:5px; height:5px; background:var(--accent); border-radius:999px; vertical-align:middle; margin:0 10px 3px; opacity:.85; }
+
+  /* Draggable frame */
+  .frame-wrap{
+    position:relative; max-width:480px; margin:0 auto;
+    transition:box-shadow 0.2s ease;
+  }
+  .image-frame{
+    position:relative; aspect-ratio:1/1; width:100%; border-radius:24px;
+    contain:layout paint; transform:translateZ(0);
+    background-color:var(--bg);
+    background-image:radial-gradient(80% 65% at 50% 45%,rgba(255,253,247,0.88) 0%,rgba(247,245,240,0) 70%);
+    border:1px solid rgba(217,210,194,0.55);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.5) inset,
+      0 20px 40px -24px rgba(15,34,49,0.12),
+      0 6px 18px -10px rgba(15,34,49,0.07);
+    overflow:hidden; display:grid; place-items:center;
+  }
+  /* Icy-blue breathing glow behind box */
+  .image-frame::before{
+    content:""; position:absolute; inset:0;
+    background:radial-gradient(ellipse 68% 58% at 50% 44%,
+      rgba(139,88,38,0.07) 0%,rgba(180,120,60,0.04) 40%,transparent 68%);
+    animation:frame-glow 4.5s ease-in-out infinite;
+    pointer-events:none; z-index:0;
+  }
+  @keyframes frame-glow{ 0%,100%{ opacity:0.50; } 50%{ opacity:1.00; } }
+  /* Bottom cream fade - above canvas */
+  .image-frame::after{
+    content:""; position:absolute; inset:0;
+    background:linear-gradient(to top,var(--bg) 0%,rgba(247,245,240,0) 40%);
+    pointer-events:none; z-index:4;
+  }
+  /* Particle canvas: above box, below fade */
+  #karton-particles{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:3; }
+
+  .ornament{
+    position:absolute; width:220px; aspect-ratio:16/9; height:auto; opacity:.45;
+    pointer-events:none; z-index:-1;
+    background-image:radial-gradient(rgba(15,34,49,0.3) 1px,transparent 1px);
+    background-size:14px 14px;
+    -webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 25%,transparent 75%);
+    mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 25%,transparent 75%);
+    will-change:transform;
+  }
+  .ornament.left { left:-90px; top:-50px; }
+  .ornament.right{ right:-90px; top:-50px; }
+  @media(max-width:720px){ .ornament{ display:none; } }
+
+  /* Sections */
+  section.block{
+    padding:120px 0; border-top:1px solid var(--rule);
+    position:relative; overflow:hidden;
+    content-visibility:auto; contain-intrinsic-size:1px 600px;
+  }
+  section.block::before{
+    content:""; position:absolute; top:60px; left:50%; transform:translateX(-50%);
+    width:560px; height:220px; pointer-events:none;
+    background-image:radial-gradient(rgba(15,34,49,0.18) 1.2px,transparent 1.4px);
+    background-size:14px 14px;
+    -webkit-mask-image:radial-gradient(ellipse 55% 70% at 50% 50%,#000 15%,transparent 75%);
+    mask-image:radial-gradient(ellipse 55% 70% at 50% 50%,#000 15%,transparent 75%);
+    opacity:0.55; z-index:0;
+  }
+  section.block .shell{ position:relative; z-index:1; }
+  @media(max-width:720px){ section.block{ padding:80px 0; } }
+  .eyebrow{ font-size:12px; letter-spacing:0.22em; text-transform:uppercase; color:var(--accent); font-weight:600; margin:0 0 18px; }
+  .section-title{ font-weight:600; font-size:clamp(28px,3.6vw,40px); letter-spacing:-0.02em; line-height:1.15; color:var(--ink); margin:0 0 64px; max-width:22ch; }
+  @media(max-width:720px){ .section-title{ margin-bottom:44px; } }
+
+  /* Feature row */
+  .feature-row{ max-width:960px; margin:20px auto 0; display:flex; gap:0; align-items:stretch; position:relative; }
+  .feature-row::before{
+    content:""; position:absolute; top:-30px; left:50%; transform:translateX(-50%);
+    width:820px; height:360px; pointer-events:none;
+    background-image:radial-gradient(rgba(255,255,255,0.9) 1.4px,transparent 1.6px);
+    background-size:14px 14px;
+    -webkit-mask-image:radial-gradient(ellipse 55% 60% at 50% 45%,#000 5%,transparent 70%);
+    mask-image:radial-gradient(ellipse 55% 60% at 50% 45%,#000 5%,transparent 70%);
+    opacity:.7; z-index:0;
+  }
+  .feature-row>*{ position:relative; z-index:1; }
+  .feature-row .sep-v{ width:2px; margin:0 24px; background:linear-gradient(to bottom,rgba(217,210,194,0) 0%,rgba(217,210,194,1) 30%,rgba(217,210,194,1) 70%,rgba(217,210,194,0) 100%); flex:none; }
+  .feature-card{ flex:1 1 0; display:flex; flex-direction:column; padding:8px 4px; }
+  .feature-card .icon-disc{ width:44px; height:44px; border-radius:999px; background:#ffffff; display:grid; place-items:center; color:var(--accent); box-shadow:0 1px 2px rgba(15,34,49,0.06),0 10px 20px -10px rgba(15,34,49,0.18); margin-bottom:22px; }
+  .feature-card .icon-disc svg{ width:20px; height:20px; }
+  .feature-card h3{ margin:0 0 8px; font-weight:600; font-size:16px; letter-spacing:-0.005em; color:var(--ink); }
+  .feature-card p{ margin:0; color:var(--ink-soft); font-size:14.5px; line-height:1.65; }
+  @media(max-width:800px){
+    .feature-row{ flex-direction:column; margin-top:40px; }
+    .feature-row .sep-v{ width:100%; height:1px; margin:24px 0; background:linear-gradient(to right,rgba(217,210,194,0) 0%,rgba(217,210,194,1) 30%,rgba(217,210,194,1) 70%,rgba(217,210,194,0) 100%); }
+  }
+
+  /* Steps */
+  .steps{ display:grid; grid-template-columns:repeat(3,1fr); gap:0; border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+  .step{ padding:40px 32px 40px 0; border-right:1px solid var(--border); display:flex; flex-direction:column; gap:18px; }
+  .step:last-child{ border-right:none; padding-right:0; }
+  .step:not(:first-child){ padding-left:32px; }
+  .step .num{ font-variant-numeric:tabular-nums; font-weight:500; font-size:13px; letter-spacing:0.14em; color:var(--ink-mute); }
+  .step .num::before{ content:""; display:inline-block; width:24px; height:1px; background:var(--accent); vertical-align:middle; margin-right:12px; transform:translateY(-2px); }
+  .step p{ margin:0; font-size:17px; line-height:1.5; color:var(--ink); font-weight:400; max-width:26ch; letter-spacing:-0.005em; }
+  @media(max-width:900px){
+    .steps{ grid-template-columns:1fr; }
+    .step{ border-right:none; border-bottom:1px solid var(--border); padding:28px 0; }
+    .step:not(:first-child){ padding-left:0; }
+    .step:last-child{ border-bottom:none; padding-bottom:0; }
+    .step:first-child{ padding-top:0; }
+  }
+
+  /* Kontakt */
+  .contact-grid{ display:grid; grid-template-columns:1.1fr 1fr; gap:72px; align-items:start; }
+  @media(max-width:900px){ .contact-grid{ grid-template-columns:1fr; gap:44px; } }
+  .contact h3{ font-weight:500; font-size:13px; letter-spacing:0.18em; text-transform:uppercase; color:var(--ink-mute); margin:0 0 14px; }
+  .contact .line{ font-size:17px; color:var(--ink); margin:0; line-height:1.7; }
+  .contact .block-row{ margin-bottom:32px; }
+  .contact .block-row:last-child{ margin-bottom:0; }
+  .contact .entity{ font-weight:600; font-size:20px; letter-spacing:-0.01em; }
+
+  /* Footer */
+  footer{ border-top:1px solid var(--rule); padding:28px 0 40px; font-size:13px; color:var(--ink-mute); display:flex; justify-content:space-between; align-items:center; gap:18px; flex-wrap:wrap; }
+  footer nav{ display:flex; gap:22px; flex-wrap:wrap; }
+  footer a{ padding:6px 0; }
+  @media(max-width:560px){ footer{ padding:22px 0 28px; gap:12px; font-size:12.5px; } footer nav{ gap:16px; } }
+  footer a{ color:var(--ink-mute); border-bottom:none; font-weight:500; }
+  footer a:hover{ color:var(--ink); }
+
+  /* On-load reveal */
+  .reveal{ opacity:0; transform:translateY(8px); animation:reveal .9s cubic-bezier(.2,.7,.2,1) forwards; }
+  .reveal.d1{ animation-delay:.05s; } .reveal.d2{ animation-delay:.18s; }
+  .reveal.d3{ animation-delay:.32s; } .reveal.d4{ animation-delay:.46s; } .reveal.d5{ animation-delay:.60s; }
+  @keyframes reveal{ to{ opacity:1; transform:translateY(0); } }
+  @media(prefers-reduced-motion:reduce){ .reveal{ opacity:1; transform:none; animation:none; } }
+
+  @media(max-width:560px){
+    .hero45 .head{ gap:14px; margin-bottom:28px; }
+    .hero45 h1.wordmark{ font-size:clamp(34px,9vw,48px); }
+    .badge{ font-size:11px; padding:5px 12px; }
+    .frame-wrap{ max-width:320px; }
+    .image-frame{ border-radius:18px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar shell">
+  <span class="mark">
+    <img src="assets/logo.jpeg" alt="imkarton.de" class="mark-logo" width="28" height="28" decoding="async" fetchpriority="high">
+    imkarton.de
+  </span>
+  <nav>
+    <a href="#tun">Was wir tun</a>
+    <a href="#arbeiten">Wie wir arbeiten</a>
+    <a href="#kontakt">Kontakt</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero45 shell" aria-label="Willkommen">
+    <div class="frame-wrap reveal d1">
+      <div class="ornament left" aria-hidden="true"></div>
+      <div class="ornament right" aria-hidden="true"></div>
+      <div class="image-frame" role="img" aria-label="Animierter 3D-Karton der Importia UG">
+        <div class="logo-stage">
+          <span class="logo-shadow" aria-hidden="true"></span>
+          <div class="logo-float">
+            <div class="carton-parallax">
+              <div class="carton">
+                <span class="face front" aria-hidden="true"></span>
+                <span class="face back"  aria-hidden="true"></span>
+                <span class="face left"  aria-hidden="true"></span>
+                <span class="face right" aria-hidden="true"></span>
+                <span class="face floor" aria-hidden="true"></span>
+                <div class="lid">
+                  <span class="flap f-front"></span>
+                  <span class="flap f-back"></span>
+                  <span class="flap f-left"></span>
+                  <span class="flap f-right"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <canvas id="karton-particles" aria-hidden="true"></canvas>
+      </div>
+    </div>
+
+    <div class="head head-below">
+      <span class="badge reveal d2"><span class="dot" aria-hidden="true"></span>Kuratierter Versandh&auml;ndler</span>
+      <h1 class="wordmark reveal d3">imkarton<span class="dot">.</span>de</h1>
+      <p class="tagline reveal d4">
+        <span>Wir w&auml;hlen mit Bedacht.</span><span class="sep" aria-hidden="true"></span><span>Wir versenden.</span><span class="sep" aria-hidden="true"></span><span>Sie erhalten.</span>
+      </p>
+    </div>
+
+    <div class="breath reveal d5" aria-hidden="true"><span class="halo"></span><span class="dots"></span></div>
+
+    <div id="tun" class="feature-row reveal d5">
+      <div class="feature-card">
+        <div class="icon-disc" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 12h2a2 2 0 1 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 14"/><path d="m7 18 1.6-1.4c.3-.4.8-.6 1.4-.6h4c1.1 0 2.1-.4 2.8-1.2l4.6-4.4a2 2 0 0 0-2.75-2.91l-4.2 3.9"/><path d="m2 13 6 6"/></svg>
+        </div>
+        <h3>Produktauswahl</h3>
+        <p>Nicht jedes Produkt kommt ins Sortiment. Wir nehmen nur Artikel auf, die wir selbst ohne Z&ouml;gern kaufen w&uuml;rden. Entscheidend sind Qualit&auml;t, Nutzen und verl&auml;ssliche Verf&uuml;gbarkeit.</p>
+      </div>
+      <div class="sep-v" aria-hidden="true"></div>
+      <div class="feature-card">
+        <div class="icon-disc" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg>
+        </div>
+        <h3>Versand</h3>
+        <p>Bestellungen bearbeiten wir werkt&auml;glich. Sobald das Paket das Lager verl&auml;sst, bekommen Sie die Sendungsnummer direkt per E&#8209;Mail.</p>
+      </div>
+      <div class="sep-v" aria-hidden="true"></div>
+      <div class="feature-card">
+        <div class="icon-disc" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M14.8 7.5a1.84 1.84 0 0 0-2.6 0l-.2.3-.2-.3a1.84 1.84 0 1 0-2.6 2.6L12 13l2.8-2.9a1.84 1.84 0 0 0 0-2.6"/></svg>
+        </div>
+        <h3>Kundenservice</h3>
+        <p>Wir melden uns in der Regel noch am selben Werktag. Klare Antworten, gehaltene Zusagen, und ein Fall gilt erst als erledigt, wenn er wirklich gel&ouml;st ist.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="arbeiten" class="block">
+    <div class="shell">
+      <p class="eyebrow">01 &nbsp; Ablauf</p>
+      <h2 class="section-title">Wie wir arbeiten.</h2>
+      <ol class="steps" role="list">
+        <li class="step"><span class="num">Schritt 01</span><p>Sie w&auml;hlen Ihr Produkt aus und schlie&szlig;en die Bestellung ab.</p></li>
+        <li class="step"><span class="num">Schritt 02</span><p>Wir best&auml;tigen die Bestellung und bereiten den Versand vor.</p></li>
+        <li class="step"><span class="num">Schritt 03</span><p>Das Paket kommt sicher verpackt bei Ihnen an, mit Sendungsnachweis.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="kontakt" class="block">
+    <div class="shell">
+      <p class="eyebrow">02 &nbsp; Kontakt</p>
+      <h2 class="section-title">Wir sind erreichbar.</h2>
+      <div class="contact-grid contact">
+        <div>
+          <div class="block-row">
+            <h3>Betreiber</h3>
+            <p class="line entity">Importia UG</p>
+            <p class="line">Betreiber des Internetauftritts imkarton.de</p>
+          </div>
+          <div class="block-row">
+            <h3>Anschrift</h3>
+            <p class="line">Weierstra&szlig;e 10</p>
+            <p class="line">52349 D&uuml;ren</p>
+            <p class="line">Deutschland</p>
+          </div>
+        </div>
+        <div>
+          <div class="block-row">
+            <h3>E&#8209;Mail</h3>
+            <p class="line"><a href="mailto:info@imkarton.de">info@imkarton.de</a></p>
+          </div>
+          <div class="block-row">
+            <h3>Telefon</h3>
+            <p class="line"><a href="tel:+491605391154">+49 160 5391154</a></p>
+          </div>
+          <div class="block-row">
+            <h3>Rechtliches</h3>
+            <p class="line"><a href="impressum.html">Impressum</a></p>
+            <p class="line"><a href="datenschutz.html">Datenschutz</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="shell">
+  <span>&copy; 2026 Importia UG (haftungsbeschr&auml;nkt). Alle Rechte vorbehalten.</span>
+  <nav>
+    <a href="impressum.html">Impressum</a>
+    <a href="datenschutz.html">Datenschutz</a>
+  </nav>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  var isMobile = window.matchMedia('(max-width:720px)').matches;
+
+  function start(){
+    if (!window.gsap){ setTimeout(start, 60); return; }
+    var gsap = window.gsap;
+
+    var carton = document.querySelector('.carton');
+    var ornL   = document.querySelector('.ornament.left');
+    var ornR   = document.querySelector('.ornament.right');
+    var frame  = document.querySelector('.frame-wrap');
+    var canvas = document.getElementById('karton-particles');
+    var ctx    = canvas ? canvas.getContext('2d') : null;
+    var hasHov = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+
+    /* Hand rotation entirely to JS - remove CSS fallback animation */
+    if (carton && !isMobile) carton.style.animation = 'none';
+
+    /* ── Velocity rotation state ──
+       velY/velX accumulate from mouse movement deltas.
+       IDLE_Y keeps a slow idle auto-spin when mouse is still.
+       FRIC_Y/X decay velocity each frame (air resistance feel). */
+    var rotY=-22, rotX=-18, velY=0, velX=0;
+    var FRIC_Y=0.988, FRIC_X=0.984, IDLE_Y=0.005;
+    var SENS_X=0.025, SENS_Y=0.016;
+    var prevMX=null, prevMY=null;
+
+    if (hasHov && !isMobile){
+      window.addEventListener('mousemove', function(e){
+        if (prevMX===null){ prevMX=e.clientX; prevMY=e.clientY; return; }
+        var dx=e.clientX-prevMX, dy=e.clientY-prevMY;
+        prevMX=e.clientX; prevMY=e.clientY;
+        /* Mouse direction directly drives spin direction */
+        velY+=dx*SENS_X; velX+=dy*SENS_Y;
+        velY=Math.max(-18,Math.min(18,velY));
+        velX=Math.max(-12,Math.min(12,velX));
+        /* Ornaments counter-drift on position (subtle depth cue) */
+        var nx=(e.clientX/window.innerWidth-0.5)*2;
+        var ny=(e.clientY/window.innerHeight-0.5)*2;
+        if(ornL) gsap.to(ornL,{x:nx*-20,y:ny*-11,duration:1.1,ease:'power2.out',overwrite:'auto'});
+        if(ornR) gsap.to(ornR,{x:nx* 20,y:ny* 11,duration:1.1,ease:'power2.out',overwrite:'auto'});
+      },{passive:true});
+    }
+
+    /* Canvas resize */
+    function resizeCanvas(){
+      if(!canvas) return;
+      var p=canvas.parentElement;
+      canvas.width=p.offsetWidth; canvas.height=p.offsetHeight;
+    }
+    if(canvas){
+      resizeCanvas();
+      if(typeof ResizeObserver!=='undefined'){
+        new ResizeObserver(resizeCanvas).observe(canvas.parentElement);
+      } else {
+        window.addEventListener('resize',resizeCanvas,{passive:true});
+      }
+    }
+
+    /* Particles */
+    var particles=[], rings=[];
+    function burst(){
+      if(!canvas) return;
+      var cx=canvas.width*0.50, cy=canvas.height*0.28;
+      for(var i=0;i<55;i++){
+        var ang=-Math.PI/2+(Math.random()-0.5)*Math.PI*1.3;
+        var spd=1.9+Math.random()*3.8;
+        particles.push({
+          x:cx+(Math.random()-0.5)*28, y:cy,
+          vx:Math.cos(ang)*spd, vy:Math.sin(ang)*spd,
+          life:0.85+Math.random()*0.25, decay:0.009+Math.random()*0.007,
+          r:1.1+Math.random()*2.7,
+          c:Math.random()>0.28?'185,128,62':'100,58,20',
+          grav:true
+        });
+      }
+      for(var j=0;j<20;j++){
+        particles.push({
+          x:cx+(Math.random()-0.5)*115, y:cy+Math.random()*22,
+          vx:(Math.random()-0.5)*0.62, vy:-0.26-Math.random()*0.52,
+          life:0.55+Math.random()*0.42, decay:0.004+Math.random()*0.003,
+          r:0.7+Math.random()*1.5, c:'185,128,62', grav:false
+        });
+      }
+      rings.push({cx:cx,cy:cy,r:6,life:1.0,spd:5.5});
+      rings.push({cx:cx,cy:cy,r:2,life:0.72,spd:3.6});
+    }
+    function drawParticles(){
+      if(!ctx) return;
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      for(var ri=rings.length-1;ri>=0;ri--){
+        var rng=rings[ri]; rng.r+=rng.spd; rng.life-=0.024;
+        if(rng.life<=0){rings.splice(ri,1);continue;}
+        ctx.save(); ctx.globalAlpha=rng.life*0.26;
+        ctx.strokeStyle='rgba(139,88,38,1)'; ctx.lineWidth=1.1;
+        ctx.beginPath(); ctx.arc(rng.cx,rng.cy,rng.r,0,Math.PI*2); ctx.stroke();
+        ctx.restore();
+      }
+      for(var pi=particles.length-1;pi>=0;pi--){
+        var p=particles[pi];
+        p.x+=p.vx; p.y+=p.vy;
+        if(p.grav) p.vy+=0.058;
+        p.vx*=0.988; p.life-=p.decay;
+        if(p.life<=0){particles.splice(pi,1);continue;}
+        ctx.save(); ctx.globalAlpha=Math.max(0,p.life)*0.72;
+        ctx.fillStyle='rgb('+p.c+')';
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,Math.max(0.3,p.r*Math.min(1,p.life*1.8)),0,Math.PI*2);
+        ctx.fill(); ctx.restore();
+      }
+    }
+
+    /* Burst timing: CSS flap cycle=10s, fully open at ~3.1s */
+    var CYCLE_MS=10000, OPEN_MS=3100, startTs=null, fired={};
+
+    /* ── Main RAF loop ── */
+    function tick(ts){
+      if(startTs===null) startTs=ts;
+      var elapsed=ts-startTs;
+      var idx=Math.floor(elapsed/CYCLE_MS);
+      var pos=elapsed%CYCLE_MS;
+
+      if(pos>=OPEN_MS && !fired[idx]){
+        fired[idx]=true; burst();
+        delete fired[idx-2];
+      }
+
+      if(carton && !isMobile){
+        velY=velY*FRIC_Y+IDLE_Y;
+        velX=velX*FRIC_X;
+        rotY+=velY;
+        rotX=Math.max(-46,Math.min(12,rotX+velX));
+        carton.style.transform=
+          'translate(-50%,-50%) rotateX('+rotX.toFixed(2)+'deg) rotateY('+rotY.toFixed(2)+'deg)';
+      }
+
+      drawParticles();
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+
+    /* ScrollTrigger section reveals */
+    if(window.ScrollTrigger){
+      gsap.registerPlugin(window.ScrollTrigger);
+      document.querySelectorAll('section.block').forEach(function(section){
+        var items=section.querySelectorAll('.eyebrow,.section-title,.step,.block-row');
+        if(!items.length) return;
+        gsap.fromTo(items,{y:32,autoAlpha:0},{
+          y:0,autoAlpha:1,duration:0.75,stagger:0.08,ease:'power2.out',
+          scrollTrigger:{trigger:section,start:'top 78%',toggleActions:'play none none reverse'}
+        });
+      });
+    }
+  }
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',start);
+  } else { start(); }
+})();
+</script>
+</body>
+</html>
