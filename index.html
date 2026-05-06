@@ -273,6 +273,34 @@
     will-change:clip-path;
   }
 
+  .carton .face.left::after{
+    content:"";
+    position:absolute;
+    left:10%; bottom:12%; right:10%; height:24%;
+    background:linear-gradient(90deg,
+      rgba(255,252,242,0.95) 0 7%,   hsl(24,55%,24%) 7% 10%,
+      rgba(255,252,242,0.95) 10% 13%, hsl(24,55%,24%) 13% 15%,
+      rgba(255,252,242,0.95) 15% 20%, hsl(24,55%,24%) 20% 24%,
+      rgba(255,252,242,0.95) 24% 27%, hsl(24,55%,24%) 27% 28%,
+      rgba(255,252,242,0.95) 28% 33%, hsl(24,55%,24%) 33% 36%,
+      rgba(255,252,242,0.95) 36% 40%, hsl(24,55%,24%) 40% 41%,
+      rgba(255,252,242,0.95) 41% 46%, hsl(24,55%,24%) 46% 49%,
+      rgba(255,252,242,0.95) 49% 53%, hsl(24,55%,24%) 53% 56%,
+      rgba(255,252,242,0.95) 56% 59%, hsl(24,55%,24%) 59% 60%,
+      rgba(255,252,242,0.95) 60% 65%, hsl(24,55%,24%) 65% 68%,
+      rgba(255,252,242,0.95) 68% 72%, hsl(24,55%,24%) 72% 74%,
+      rgba(255,252,242,0.95) 74% 79%, hsl(24,55%,24%) 79% 82%,
+      rgba(255,252,242,0.95) 82% 86%, hsl(24,55%,24%) 86% 87%,
+      rgba(255,252,242,0.95) 87% 92%, hsl(24,55%,24%) 92% 95%,
+      rgba(255,252,242,0.95) 95% 100%
+    );
+    border:0.5px solid rgba(140,100,45,0.20);
+    box-shadow:0 2px 4px rgba(0,0,0,0.09);
+    transform:translateZ(0.2px);
+    backface-visibility:hidden;
+    pointer-events:none;
+  }
+
   /* BACK FACE — two vertical duct tape strips, slightly offset = overlapping look */
   .carton .face.back::before{
     content:"";
@@ -309,15 +337,14 @@
     will-change:clip-path;
   }
 
-  /* RIGHT FACE — ZERBRECHLICH fragile sticker + diamond mark */
   .carton .face.right::before{
-    content:"ZERBRECHLICH";
+    content:"EMPFÄNGER";
     position:absolute;
-    left:8%; top:58%; right:8%; height:20%;
+    left:8%; top:44%; right:8%; height:16%;
     display:flex; align-items:center; justify-content:center;
-    font-size:calc(var(--sz) * 0.068);
+    font-size:calc(var(--sz) * 0.062);
     font-weight:700;
-    letter-spacing:0.13em;
+    letter-spacing:0.14em;
     color:hsl(24,58%,24%);
     background:rgba(255,252,242,0.95);
     border:0.5px solid rgba(140,100,45,0.20);
@@ -328,12 +355,13 @@
     backface-visibility:hidden;
   }
   .carton .face.right::after{
-    content:"◆";
+    content:"Weierstr. 10 · Düren";
     position:absolute;
-    left:8%; top:46%; right:8%; height:13%;
+    left:8%; top:62%; right:8%; height:14%;
     display:flex; align-items:center; justify-content:center;
-    font-size:calc(var(--sz) * 0.10);
-    color:rgba(255,252,242,0.80);
+    font-size:calc(var(--sz) * 0.054);
+    font-weight:500;
+    color:hsl(24,55%,30%);
     pointer-events:none;
     transform:translateZ(0.1px);
     backface-visibility:hidden;
@@ -416,34 +444,31 @@
      pull, ease-in at the end — feels like tape being pressed flat.
      ──────────────────────────────────────────────────────────── */
   @keyframes tape-seam{
-    /* hidden while flaps are open */
-    0%,90%  { clip-path:inset(0 100% 0 0); opacity:0; }
-    /* flaps close — tape pops visible at left edge, sweeps right */
-    90.1%   { clip-path:inset(0 100% 0 0); opacity:1;
+    0%,88%  { clip-path:inset(0 100% 0 0); opacity:0; }
+    88.1%   { clip-path:inset(0 100% 0 0); opacity:1;
               animation-timing-function:cubic-bezier(0.55,0,0.15,1); }
-    94%     { clip-path:inset(0 0 0 0);    opacity:1; }
+    96%     { clip-path:inset(0 0 0 0);    opacity:1; }
     100%    { clip-path:inset(0 0 0 0);    opacity:1; }
   }
   @keyframes tape-left{
-    0%,92%  { clip-path:inset(0 0 100% 0); opacity:0; }
-    92.1%   { clip-path:inset(0 0 100% 0); opacity:1;
+    0%,90%  { clip-path:inset(0 0 100% 0); opacity:0; }
+    90.1%   { clip-path:inset(0 0 100% 0); opacity:1;
               animation-timing-function:cubic-bezier(0.55,0,0.15,1); }
-    96.5%   { clip-path:inset(0 0 0 0);    opacity:1; }
+    98%     { clip-path:inset(0 0 0 0);    opacity:1; }
     100%    { clip-path:inset(0 0 0 0);    opacity:1; }
   }
   @keyframes tape-back1{
-    0%,93.2%  { clip-path:inset(0 0 100% 0); opacity:0; }
-    93.3%     { clip-path:inset(0 0 100% 0); opacity:1;
+    0%,91.5%  { clip-path:inset(0 0 100% 0); opacity:0; }
+    91.6%     { clip-path:inset(0 0 100% 0); opacity:1;
                 animation-timing-function:cubic-bezier(0.55,0,0.15,1); }
-    97.7%     { clip-path:inset(0 0 0 0);    opacity:1; }
+    99.5%     { clip-path:inset(0 0 0 0);    opacity:1; }
     100%      { clip-path:inset(0 0 0 0);    opacity:1; }
   }
   @keyframes tape-back2{
-    0%,94.4%  { clip-path:inset(0 0 100% 0); opacity:0; }
-    94.5%     { clip-path:inset(0 0 100% 0); opacity:1;
-                animation-timing-function:cubic-bezier(0.55,0,0.15,1); }
-    98.9%     { clip-path:inset(0 0 0 0);    opacity:1; }
-    100%      { clip-path:inset(0 0 0 0);    opacity:1; }
+    0%,93%  { clip-path:inset(0 0 100% 0); opacity:0; }
+    93.1%   { clip-path:inset(0 0 100% 0); opacity:1;
+              animation-timing-function:cubic-bezier(0.55,0,0.15,1); }
+    100%    { clip-path:inset(0 0 0 0);    opacity:1; }
   }
 
   @media(max-width:720px){
@@ -843,10 +868,10 @@
     var particles=[], rings=[];
     function burst(){
       if(!canvas) return;
-      var cx=canvas.width*0.50, cy=canvas.height*0.28;
+      var cx=canvas.width*0.50, cy=canvas.height*0.12;
       for(var i=0;i<55;i++){
         var ang=-Math.PI/2+(Math.random()-0.5)*Math.PI*1.3;
-        var spd=1.9+Math.random()*3.8;
+        var spd=2.8+Math.random()*4.5;
         particles.push({
           x:cx+(Math.random()-0.5)*28, y:cy,
           vx:Math.cos(ang)*spd, vy:Math.sin(ang)*spd,
