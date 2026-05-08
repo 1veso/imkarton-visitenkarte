@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>imkarton.de</title>
-<meta name="description" content="imkarton.de, betrieben von der Importia UG. Kuratierte Produkte, zuverlässiger Versand, sachlicher Kundenservice." />
+<title>imkarton.de · Kuratierter Versandhandel · Düren</title>
+<meta name="description" content="imkarton.de, betrieben von der Importia UG (haftungsbeschränkt). Kuratierte Produkte, zuverlässiger Versand, sachlicher Kundenservice." />
 <link rel="canonical" href="https://imkarton.de/" />
 <meta name="theme-color" content="#F7F5F0">
 <meta name="color-scheme" content="light">
@@ -31,14 +31,14 @@
     --border: #E5DFD2;
     --border-soft: #EDE8DB;
     --rule: #D9D2C2;
-    /* ── Real cardboard face tones — flat, matte, directional ──
+    /* ── Real cardboard face tones, flat, matte, directional ──
        Top/flaps catch most light. Front is medium. Sides fall off.
        Back and floor are darkest. No shine, no gradient within a face. */
-    --face-top:   hsl(30, 50%, 52%);   /* flaps / lid — brightest */
-    --face-front: hsl(26, 55%, 40%);   /* front face — medium */
-    --face-side:  hsl(24, 57%, 33%);   /* left / right — darker */
-    --face-back:  hsl(22, 59%, 27%);   /* back — darkest side */
-    --face-floor: hsl(20, 60%, 22%);   /* floor — deepest */
+    --face-top:   hsl(30, 50%, 52%);   /* flaps / lid, brightest */
+    --face-front: hsl(26, 55%, 40%);   /* front face, medium */
+    --face-side:  hsl(24, 57%, 33%);   /* left / right, darker */
+    --face-back:  hsl(22, 59%, 27%);   /* back, darkest side */
+    --face-floor: hsl(20, 60%, 22%);   /* floor, deepest */
     --edge-hi:    hsl(30, 46%, 56%);   /* lighter edge on top-facing edges */
     --edge-lo:    hsl(22, 55%, 24%);   /* darker edge on shadow edges */
     --seam:       rgba(50, 24, 4, 0.60); /* deep pressed fold-crease */
@@ -145,7 +145,7 @@
   /* Parallax wrapper - kept for DOM/preserve-3d structure; JS no longer animates it */
   .carton-parallax{ position:absolute; inset:0; transform-style:preserve-3d; }
 
-  /* Carton: NO animation — JS drives transform via direct style in RAF */
+  /* Carton: NO animation, JS drives transform via direct style in RAF */
   .carton{
     --sz:clamp(110px,14vw,190px); --half:calc(var(--sz)/2);
     width:var(--sz); height:var(--sz);
@@ -213,7 +213,7 @@
      face top/bottom edges to read as wrapping around the panels.
      ──────────────────────────────────────────────────────────── */
 
-  /* FRONT FACE — cream handling label */
+  /* FRONT FACE, cream handling label */
   .carton .face.front::before{
     content:"";
     position:absolute;
@@ -239,7 +239,7 @@
     backface-visibility:hidden;
   }
 
-  /* FLAP SEAM — amber tape strip across the f-front/f-back join on closed lid */
+  /* FLAP SEAM, amber tape strip across the f-front/f-back join on closed lid */
   .carton .flap.f-back::after{
     content:"";
     position:absolute;
@@ -254,7 +254,7 @@
     will-change:clip-path;
   }
 
-  /* LEFT FACE — single vertical duct tape strip */
+  /* LEFT FACE, single vertical duct tape strip */
   .carton .face.left::before{
     content:"";
     position:absolute;
@@ -301,7 +301,7 @@
     pointer-events:none;
   }
 
-  /* BACK FACE — two vertical duct tape strips, slightly offset = overlapping look */
+  /* BACK FACE, two vertical duct tape strips, slightly offset = overlapping look */
   .carton .face.back::before{
     content:"";
     position:absolute;
@@ -441,7 +441,7 @@
        back1 → 94.2-97.7% (vertical, top-to-bottom)
        back2 → 95.4-98.9% (vertical, top-to-bottom)
      The reveal easing cubic-bezier(0.55,0,0.15,1) = fast initial
-     pull, ease-in at the end — feels like tape being pressed flat.
+     pull, ease-in at the end, feels like tape being pressed flat.
      ──────────────────────────────────────────────────────────── */
   @keyframes tape-seam{
     0%,88%  { clip-path:inset(0 100% 0 0); opacity:0; }
@@ -482,7 +482,7 @@
     .carton{ transform:translate(-50%,-50%) rotateX(-18deg) rotateY(-22deg); }
     .logo-shadow{ animation:none !important; transform:translateX(-50%); }
     .image-frame::before{ animation:none !important; }
-    /* Show tape statically — no wrapping animation, just visible */
+    /* Show tape statically, no wrapping animation, just visible */
     .carton .face.left::before,
     .carton .face.back::before,
     .carton .face.back::after,
@@ -682,7 +682,7 @@
     <div class="frame-wrap reveal d1">
       <div class="ornament left" aria-hidden="true"></div>
       <div class="ornament right" aria-hidden="true"></div>
-      <div class="image-frame" role="img" aria-label="Animierter 3D-Karton der Importia UG">
+      <div class="image-frame" role="img" aria-label="Animierter 3D-Karton der Importia UG (haftungsbeschr&auml;nkt)">
         <div class="logo-stage">
           <span class="logo-shadow" aria-hidden="true"></span>
           <div class="logo-float">
@@ -764,8 +764,13 @@
         <div>
           <div class="block-row">
             <h3>Betreiber</h3>
-            <p class="line entity">Importia UG</p>
+            <p class="line entity">Importia UG (haftungsbeschr&auml;nkt)</p>
             <p class="line">Betreiber des Internetauftritts imkarton.de</p>
+          </div>
+          <div class="block-row">
+            <h3>Gesch&auml;ftsf&uuml;hrerinnen</h3>
+            <p class="line">Jolanta Daugelaite</p>
+            <p class="line">Irene Geier</p>
           </div>
           <div class="block-row">
             <h3>Anschrift</h3>
